@@ -21,6 +21,18 @@ import { ExportModal } from './modal';
 // } from './utils/enc';
 import { ANKI_CONNECT_DEFAULT_PORT } from './utils/anki';
 import { isNumeric } from './utils/validations';
+import { CustomModel } from './models/customModel';
+
+class AutoAnkiPlugin extends Plugin {
+    // 现有代码...
+
+    async callCustomApi(data: any) {
+        // 现有API调用逻辑...
+
+        const model = new CustomModel(data);
+        model.process();
+    }
+}
 import { StatusBarElement } from './utils/cusom-types';
 
 export default class AutoAnkiPlugin extends Plugin {
