@@ -92,7 +92,7 @@ export default class AutoAnkiPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'export-current-file-to-anki',
+			id: 'export-current-file-to-anki-custom',
 			name: '导出当前文件到Anki',
 			checkCallback: (checking: boolean) => {
 				if (this.settings.customApiKey == null) {
@@ -161,7 +161,7 @@ class AutoAnkiSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		const ankiDescription = document.createElement('div');
-		ankiDescription.innerHTML = '<p><a href="https://apps.ankiweb.net/">Anki</a> is an open-source flashcard program that is popular for spaced repetition. This plugin has only been tested on deskt[...]
+		ankiDescription.innerHTML = '<p><a href="https://apps.ankiweb.net/">Anki</a> is an open-source flashcard program that is popular for spaced repetition. This plugin has only been tested on deskt[...] </p>'
 		containerEl.appendChild(ankiDescription)
 		
 		new Setting(containerEl)
@@ -371,7 +371,7 @@ class AutoAnkiSettingTab extends PluginSettingTab {
 
         const openAiTokenDescription = new DocumentFragment();
         const openAiTokenDescHtml = document.createElement('p');
-        openAiTokenDescHtml.innerHTML = 'The maximum number of tokens consumed for each question. See <a href="https://platform.openai.com/tokenizer">tokens</a> to better understand how tokens ar[...]
+        openAiTokenDescHtml.innerHTML = 'The maximum number of tokens consumed for each question. See <a href="https://platform.openai.com/tokenizer">tokens</a> to better understand how tokens ar[...] </a>'
         openAiTokenDescription.appendChild(openAiTokenDescHtml);
 
         new Setting(containerEl)
