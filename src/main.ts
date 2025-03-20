@@ -27,7 +27,25 @@ export default class AutoAnkiPlugin extends Plugin {
 	settings: PluginSettings;
 	statusBar: StatusBarElement;
 	statusBarIcon: HTMLElement;
-	
+
+class AutoAnkiPlugin extends Plugin {
+    // 现有代码...
+
+    async callCustomApi(data: any) {
+        const response = await request({
+            url: 'https://your-custom-api-endpoint.com',
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${this.settings.customApiKey}`,
+            },
+        });
+        return JSON.parse(response);
+    }
+
+    // 现有代码...
+}
 	async onload() {
 		await this.loadSettings();
 				
@@ -97,40 +115,33 @@ export default class AutoAnkiPlugin extends Plugin {
 		});
 
 		this.addCommand({
-			id: 'export-text-selection-to-anki',
-			name: 'Export Highlighted Text to Anki',
-			editorCheckCallback: (checking: boolean, editor: Editor, view: MarkdownView) => {
-				const currTextSelection = editor.getSelection();
+    id: 'export-current-file-to-anki',
+    name: '导出当前文件到Anki',
+    checkCallback: (checking: boolean) => {
+        if (this.settings.customApiKey == null) {
+            return false;
+        }
 
-				if (this.settings.openAiApiKey == null) {
-					return false;
-				}
+        const view = this.app.workspace.getActiveViewOfType(MarkdownView);
+        if (view == null) {
+            return false;
+        }
 
-				if (!checking) {
-					if (currTextSelection.length == 0) {
-						new Notice('No text was selected!');
-						return;
-					}
+        if (!checking) {
+            if (view.data.length <= 0) {
+                new Notice('文件为空！');
+                return;
+            }
 
-					// const apiKey = electronDecrypt(this.settings.openAiApiKey);
-					const apiKey = this.settings.openAiApiKey;
-					const port = this.settings.ankiConnectPort || ANKI_CONNECT_DEFAULT_PORT;
-					new ExportModal(
-						this.app,
-						this.statusBar,
-						currTextSelection,
-						apiKey,
-						port,
-						this.settings.ankiDestinationDeck,
-						this.settings.gptAdvancedOptions,
-						defaultsTextSelection.numQuestions,
-						defaultsTextSelection.numAlternatives,
-					).open();
-				}
+            const apiKey = this.settings.customApiKey;
+            this.callCustomApi(view.data).then(response => {
+                // 处理自定义API的响应
+            });
+        }
 
-				return true;
-			},
-		});
+        return true;
+    },
+});
 	}
 	
 	onunload() {
